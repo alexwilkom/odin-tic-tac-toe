@@ -53,23 +53,27 @@ function GameController(playerOneName = "Player 1", playerTwoName = "Player 2") 
         const board = gameBoard.getBoard();
         gameBoard.placeMark(row, column, getActivePlayer().mark);
 
+        const equals = (a, b, c) => {
+            return (a === b && b == c);
+        }
+
         const checkWinner = () => {
             for (let i = 0; i < board.length; i++) {
                 // Check rows
-                if (board[i][0] !== "" && board[i][0] === board[i][1] && board[i][1] === board[i][2]) {
+                if (board[i][0] !== "" && equals(board[i][0], board[i][1], board[i][2])) {
                     gameOver = true;
                     return `${getActivePlayer().name} wins!`;
                 }
                 // Check columns
-                if (board[0][i] !== "" && board[0][i] === board[1][i] && board[1][i] === board[2][i]) {
+                if (board[0][i] !== "" && equals(board[0][i], board[1][i], board[2][i])) {
                     gameOver = true;
                     return `${getActivePlayer().name} wins!`;
                 }
             }
             // Check diagonals
             if (
-                (board[0][0] !== "" && board[0][0] === board[1][1] && board[1][1] === board[2][2]) ||
-                (board[0][2] !== "" && board[0][2] === board[1][1] && board[1][1] === board[2][0])
+                (board[0][0] !== "" && equals(board[0][0], board[1][1], board[2][2])) ||
+                (board[0][2] !== "" && equals(board[0][2], board[1][1], board[2][0]))
             ) {
                 gameOver = true;
                 return `${getActivePlayer().name} wins!`;
