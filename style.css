@@ -32,4 +32,5 @@ body {
     display: grid;
     place-content: center;
     cursor: pointer;
+    font-size: x-large;
 }
