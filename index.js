@@ -33,7 +33,7 @@ function GameBoard() {
     }
 }
 
-(function GameController(playerOneName = "Player 1", playerTwoName = "Player 2") {
+function GameController(playerOneName = "Player 1", playerTwoName = "Player 2") {
     const gameBoard = GameBoard();
     const players = [
         {
@@ -52,7 +52,7 @@ function GameBoard() {
     }
     const getActivePlayer = () => activePlayer;
 
-    const playNewRound = () => {
+    const printNewRound = () => {
         console.log(`${getActivePlayer().name}'s turn.`);
         gameBoard.printBoard();
     }
@@ -60,7 +60,6 @@ function GameBoard() {
     const playTurn = (row, column) => {
         const board = gameBoard.getBoard();
 
-        playNewRound();
         gameBoard.placeMark(row, column, getActivePlayer().mark);
 
         const checkWinner = () => {
@@ -104,10 +103,36 @@ function GameBoard() {
 
         checkWinner();
         switchActivePlayer();
+        printNewRound();
     }
+
+    printNewRound();
 
     return {
         playTurn,
         getActivePlayer
     }
-})()
+}
+
+function DisplayController() {
+    const board = GameBoard().getBoard();
+    const player = GameController().getActivePlayer();
+    const turn = document.querySelector(".turn");
+    const grid = document.querySelector(".grid");
+
+    turn.innerText = player.name;
+
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board.length; j++) {
+            const button = document.createElement("button");
+            button.setAttribute("type", "button");
+            button.dataset.row = i;
+            button.dataset.column = j;
+            button.classList.add("cell");
+            button.innerText = board[i][j];
+            grid.appendChild(button);
+        }
+    }
+}
+
+DisplayController();
