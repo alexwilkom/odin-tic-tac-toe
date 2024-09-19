@@ -24,18 +24,8 @@ function GameBoard() {
     }
 }
 
-function GameController(playerOneName = "Player 1", playerTwoName = "Player 2") {
+function GameController(players) {
     const gameBoard = GameBoard();
-    const players = [
-        {
-            name: playerOneName,
-            mark: "X"
-        },
-        {
-            name: playerTwoName,
-            mark: "O"
-        }
-    ];
 
     let activePlayer = players[0];
 
@@ -93,29 +83,48 @@ function GameController(playerOneName = "Player 1", playerTwoName = "Player 2") 
                 return "It is a draw!";
             }
 
-            return null;  // <-- Return null if no winner or draw
+            return null;
         }
 
         const outcome = checkWinner();
-        if (!gameOver) switchActivePlayer();  // <-- Only switch player if game isn't over
-        return outcome;  // <-- Return the outcome (winner or draw message)
+        if (!gameOver) switchActivePlayer();
+        return outcome;
     }
 
     return {
         playTurn,
         getActivePlayer,
-        getBoard: gameBoard.getBoard
+        gameBoard
     }
 }
 
-(function DisplayController() {
-    const game = GameController();
-    const board = game.getBoard();
+function Players() {
+    const playerOneName = document.querySelector("#player-1").value.trim();
+    const playerTwoName = document.querySelector("#player-2").value.trim();
+
+    const players = [
+        { name: playerOneName || "Player 1", mark: "X" },
+        { name: playerTwoName || "Player 2", mark: "O" }
+    ];
+
+    const getPlayers = () => players;
+
+    return { getPlayers };
+}
+
+function DisplayController() {
+    const players = Players().getPlayers();
+    const game = GameController(players);
+    const board = game.gameBoard.getBoard();
 
     const messageDisplay = document.querySelector(".message");
     const gridDisplay = document.querySelector(".grid");
 
     let gameOutcome = null;
+
+    // Show the game board and hide the start container
+    document.querySelector(".start-game-container").classList.add("display-none");
+    document.querySelector(".board-container").classList.remove("display-none");
 
     const updateDisplay = () => {
 
@@ -149,9 +158,9 @@ function GameController(playerOneName = "Player 1", playerTwoName = "Player 2") 
         if (board[row][column]) {
             return;
         } else {
-            gameOutcome = game.playTurn(row, column);  // <-- Get the outcome from playTurn
+            gameOutcome = game.playTurn(row, column);
             if (gameOutcome) {
-                messageDisplay.textContent = gameOutcome;  // <-- Clear the turn message when game ends
+                messageDisplay.textContent = gameOutcome;
             }
         }
         updateDisplay();
@@ -161,4 +170,14 @@ function GameController(playerOneName = "Player 1", playerTwoName = "Player 2") 
 
     // Initial rendering
     updateDisplay();
+}
+
+(function StartNewGame() {
+    document.addEventListener("DOMContentLoaded", () => {
+        const startGameBtn = document.querySelector("#start-game-btn");
+        startGameBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            DisplayController();
+        });
+    });
 })()

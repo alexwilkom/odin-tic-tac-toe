@@ -9,12 +9,21 @@ body {
     align-items: center;
     min-height: 100svh;
     background-color: #FAFCFD;
+    text-align: center;
 }
 
-.container {
-    max-width: 100%;
-    border: 1px solid red;
+.display-block {
+    display: block;
 }
+
+.display-none {
+    display: none;
+}
+
+/* .start-game-container,
+.board {
+    text-align: center;
+} */
 
 .grid {
     display: grid;
