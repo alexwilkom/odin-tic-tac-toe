@@ -12,18 +12,9 @@ body {
     text-align: center;
 }
 
-.display-block {
-    display: block;
-}
-
-.display-none {
+.hidden {
     display: none;
 }
-
-/* .start-game-container,
-.board {
-    text-align: center;
-} */
 
 .grid {
     display: grid;

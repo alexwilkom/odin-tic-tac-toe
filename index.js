@@ -1,7 +1,7 @@
 function GameBoard() {
     const rows = 3;
     const columns = 3;
-    const board = [];
+    let board = [];
 
     for (let i = 0; i < rows; i++) {
         board[i] = [];
@@ -18,14 +18,20 @@ function GameBoard() {
         }
     }
 
+    const resetBoard = () => {
+        board = [];
+    }
+
     return {
         getBoard,
-        placeMark
+        placeMark,
+        resetBoard
     }
 }
 
-function GameController(players) {
+function GameController() {
     const gameBoard = GameBoard();
+    const players = Players().getPlayers();
 
     let activePlayer = players[0];
 
@@ -43,9 +49,7 @@ function GameController(players) {
         const board = gameBoard.getBoard();
         gameBoard.placeMark(row, column, getActivePlayer().mark);
 
-        const equals = (a, b, c) => {
-            return (a === b && b == c);
-        }
+        const equals = (a, b, c) => (a === b && b == c);
 
         const checkWinner = () => {
             for (let i = 0; i < board.length; i++) {
@@ -91,10 +95,17 @@ function GameController(players) {
         return outcome;
     }
 
+    const resetGame = () => {
+        gameBoard.resetBoard();
+        activePlayer = players[0];
+        gameOver = false;
+    };
+
     return {
+        gameBoard,
         playTurn,
         getActivePlayer,
-        gameBoard
+        resetGame
     }
 }
 
@@ -113,18 +124,13 @@ function Players() {
 }
 
 function DisplayController() {
-    const players = Players().getPlayers();
-    const game = GameController(players);
+    const game = GameController();
     const board = game.gameBoard.getBoard();
 
     const messageDisplay = document.querySelector(".message");
     const gridDisplay = document.querySelector(".grid");
 
     let gameOutcome = null;
-
-    // Show the game board and hide the start container
-    document.querySelector(".start-game-container").classList.add("display-none");
-    document.querySelector(".board-container").classList.remove("display-none");
 
     const updateDisplay = () => {
 
@@ -170,14 +176,34 @@ function DisplayController() {
 
     // Initial rendering
     updateDisplay();
+
+    return { updateDisplay }
 }
 
-(function StartNewGame() {
-    document.addEventListener("DOMContentLoaded", () => {
-        const startGameBtn = document.querySelector("#start-game-btn");
+(function GameUI() {
+    const startContainer = document.querySelector('.start-game-container');
+    const boardContainer = document.querySelector('.board-container');
+    const startGameBtn = document.querySelector("#start-game-btn");
+    const restartGameBtn = document.querySelector("#restart-game-btn");
+
+    function toggleVisibility() {
+        startContainer.classList.toggle('hidden');
+        boardContainer.classList.toggle('hidden');
+    }
+
+    function setupEventListeners() {
         startGameBtn.addEventListener("click", (event) => {
             event.preventDefault();
+            toggleVisibility();
             DisplayController();
         });
-    });
-})()
+
+        restartGameBtn.addEventListener("click", () => {
+            toggleVisibility();
+            GameController().resetGame();
+            DisplayController().updateDisplay();
+        });
+    }
+
+    setupEventListeners();
+})();
