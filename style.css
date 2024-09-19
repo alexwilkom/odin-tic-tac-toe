@@ -9,7 +9,6 @@ body {
     align-items: center;
     min-height: 100svh;
     background-color: #FAFCFD;
-    text-align: center;
 }
 
 .hidden {
@@ -28,9 +27,34 @@ body {
 }
 
 .cell {
-    border: 1px solid blue;
     display: grid;
     place-content: center;
     cursor: pointer;
     font-size: x-large;
+
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid;
+}
+
+.board-container {
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: .4rem;
+}
+
+input {
+    padding: 0.4rem;
+}
+
+button {
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+}
+
+#start-game-btn {
+    width: 100%;
 }
